@@ -1,28 +1,30 @@
-name: "terraform destroy"
+name: "Terraform destroy on workflow dispatch"
 on:
   workflow_dispatch:
 
 jobs:
   terraform:
-    name: "Terraform-Destory"
+    name: "Terraform destory"
     runs-on: ubuntu-latest
     env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      TERRAFORM_VERSION: 1.4.4
+      TERRAFORM_VERSION: 1.4.5
 
     steps:
       - name: "Checkout"
         uses: actions/checkout@main
 
-      - name: "Terraform Init"
-        uses: hashicorp/terraform-github-actions@v0.8.0
+      - name: "Configure AWS credentials"
+        uses: aws-actions/configure-aws-credentials@main
         with:
-          tf_actions_version: ${{ env.TERRAFORM_VERSION }}
-          tf_actions_subcommand: "init"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
 
-      - name: Terraform Destroy
-        id: destroy
+      - name: "Terraform setup"
+        uses: hashicorp/setup-terraform@main
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+      - id: init
+        run: terraform init
+      - id: destroy
         run: terraform destroy -auto-approve
