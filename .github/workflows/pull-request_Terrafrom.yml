@@ -26,7 +26,7 @@ jobs:
 
       - name: "Terraform fmt"
         id: fmt
-        run: terraform fmt
+        run: terraform fmt -check -recursive
 
       - name: "Terraform init"
         id: init
@@ -38,4 +38,4 @@ jobs:
 
       - name: "Terraform plan"
         id: plan
-        run: terraform plan
+        run: terraform plan -no-color
