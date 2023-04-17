@@ -1,10 +1,12 @@
-name: "Terraform destroy on workflow dispatch"
+name: "Terraform apply on main-branch push"
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   terraform:
-    name: "Terraform init and destory"
+    name: "Terraform fmt, init and apply"
     runs-on: ubuntu-latest
     env:
       TERRAFORM_VERSION: 1.4.5
@@ -25,10 +27,14 @@ jobs:
         with:
           terraform_version: ${{ env.TERRAFORM_VERSION }}
 
+      - name: "Terraform fmt"
+        id: fmt
+        run: terraform fmt
+
       - name: "Terraform init"
         id: init
         run: terraform init
 
-      - name: "Terrafrom destroy"
-        id: destroy
-        run: terraform destroy -auto-approve
+      - name: "Terraform apply"
+        id: apply
+        run: terraform apply
