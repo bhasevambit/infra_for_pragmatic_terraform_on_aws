@@ -24,7 +24,11 @@ jobs:
         uses: hashicorp/setup-terraform@main
         with:
           terraform_version: ${{ env.TERRAFORM_VERSION }}
-      - id: init
+
+      - name: "Terraform init"
+        id: init
         run: terraform init
-      - id: destroy
+
+      - name: "Terrafrom destroy"
+        id: destroy
         run: terraform destroy -auto-approve
